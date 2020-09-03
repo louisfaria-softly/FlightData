@@ -1,4 +1,4 @@
-package louis.flight.status.info.data.local.dao
+package com.flight.louis.flighttracker.data.local.dao
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
@@ -6,12 +6,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import louis.flight.status.info.data.local.AppDatabase
 import louis.flight.status.info.data.local.model.Country
-import louis.flight.status.info.testCountry1
-import louis.flight.status.info.testCountry2
-import louis.flight.status.info.testCountry3
-import louis.flight.status.info.testCountry4
-import louis.flight.status.info.testCountry5
-import louis.flight.status.info.testCountry6
+import com.flight.louis.flighttracker.testCountry1
+import com.flight.louis.flighttracker.testCountry2
+import com.flight.louis.flighttracker.testCountry3
+import com.flight.louis.flighttracker.testCountry4
+import com.flight.louis.flighttracker.testCountry5
+import com.flight.louis.flighttracker.testCountry6
 import java.util.concurrent.Executors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +21,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import louis.flight.status.info.data.local.dao.CountriesDao
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After

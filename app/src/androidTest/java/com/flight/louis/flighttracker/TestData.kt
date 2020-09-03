@@ -1,4 +1,4 @@
-package louis.flight.status.info
+package com.flight.louis.flighttracker
 
 import louis.flight.status.info.data.local.model.Country
 import louis.flight.status.info.data.local.model.GlobalSummary

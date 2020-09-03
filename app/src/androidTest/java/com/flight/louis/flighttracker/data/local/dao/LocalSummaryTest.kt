@@ -1,12 +1,13 @@
-package louis.flight.status.info.data.local.dao
+package com.flight.louis.flighttracker.data.local.dao
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import louis.flight.status.info.data.local.AppDatabase
-import louis.flight.status.info.data.local.model.GlobalSummary
-import louis.flight.status.info.testGlobalSummary
+import louis.flight.status.info.data.local.model.LocalSummary
+import com.flight.louis.flighttracker.testLocalSummary
 import java.util.concurrent.Executors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,8 +17,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import louis.flight.status.info.data.local.dao.LocalSummaryDao
+import org.hamcrest.CoreMatchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -26,14 +27,14 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class GlobalSummaryDaoTest {
+class LocalSummaryTest {
 
     private lateinit var database: AppDatabase
-    private lateinit var globalSummaryDao: GlobalSummaryDao
+    private lateinit var localSummaryDao: LocalSummaryDao
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private val testGlobalData = testGlobalSummary
+    private val testLocalData = testLocalSummary
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -47,7 +48,7 @@ class GlobalSummaryDaoTest {
             .inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .setTransactionExecutor(Executors.newSingleThreadExecutor())
             .build()
-        globalSummaryDao = database.globalSummaryDao()
+        localSummaryDao = database.localSummaryDao()
     }
 
     @After
@@ -60,37 +61,35 @@ class GlobalSummaryDaoTest {
 
     @Test
     fun testInsertAndGetSummary() = runBlocking {
-        globalSummaryDao.insert(testGlobalData)
+        localSummaryDao.insert(testLocalData)
 
-        val result = globalSummaryDao.getGlobalSummaryFlow().take(1).toList()[0]
+        val result = localSummaryDao.getLocalSummaryFlow().take(1).toList()[0]
 
-        assertThat(result.confirmed, equalTo(testGlobalData.confirmed))
-        assertThat(result.recovered, equalTo(testGlobalData.recovered))
-        assertThat(result.deaths, equalTo(testGlobalData.deaths))
-        assertThat(result.imageUrl, equalTo(testGlobalData.imageUrl))
-        assertThat(result.lastUpdate, equalTo(testGlobalData.lastUpdate))
+        assertThat(result.confirmed, CoreMatchers.equalTo(testLocalData.confirmed))
+        assertThat(result.recovered, CoreMatchers.equalTo(testLocalData.recovered))
+        assertThat(result.deaths, CoreMatchers.equalTo(testLocalData.deaths))
+        assertThat(result.lastUpdate, CoreMatchers.equalTo(testLocalData.lastUpdate))
     }
 
     @Test
     fun testReplaceSummary() = runBlocking {
         // Replace 2 times to check if there will be no duplicated data
-        globalSummaryDao.replace(testGlobalData)
-        globalSummaryDao.replace(testGlobalData)
+        localSummaryDao.replace(testLocalData)
+        localSummaryDao.replace(testLocalData)
 
-        val result: GlobalSummary = globalSummaryDao.getGlobalSummaryFlow().take(1).toList()[0]
-        assertThat(result.confirmed, equalTo(testGlobalData.confirmed))
-        assertThat(result.recovered, equalTo(testGlobalData.recovered))
-        assertThat(result.deaths, equalTo(testGlobalData.deaths))
-        assertThat(result.imageUrl, equalTo(testGlobalData.imageUrl))
-        assertThat(result.lastUpdate, equalTo(testGlobalData.lastUpdate))
+        val result: LocalSummary = localSummaryDao.getLocalSummaryFlow().take(1).toList()[0]
+        assertThat(result.confirmed, CoreMatchers.equalTo(testLocalData.confirmed))
+        assertThat(result.recovered, CoreMatchers.equalTo(testLocalData.recovered))
+        assertThat(result.deaths, CoreMatchers.equalTo(testLocalData.deaths))
+        assertThat(result.lastUpdate, CoreMatchers.equalTo(testLocalData.lastUpdate))
     }
 
     @Test
     fun testDeleteCountries() = runBlocking {
-        globalSummaryDao.replace(testGlobalData)
-        globalSummaryDao.delete()
+        localSummaryDao.replace(testLocalData)
+        localSummaryDao.delete()
 
-        val result = globalSummaryDao.getGlobalSummaryFlow().take(1).toList()
+        val result = localSummaryDao.getLocalSummaryFlow().take(1).toList()
         assert(result.isEmpty())
     }
 }
