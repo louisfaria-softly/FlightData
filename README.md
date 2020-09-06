@@ -2,6 +2,9 @@
 
 
 
-![Screenshot](screenshot_2.jpg)
 
-![Screenshot](screenshot_1.jpg)
+
+
+<img src="screenshot_1.jpg" width="200">
+
+<img src="screenshot_2.jpg" width="200">
